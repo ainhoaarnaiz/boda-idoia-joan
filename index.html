@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Programa de la Celebración</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#F8F3E9;
+    --sand:#EEE3CE;
+    --line:#C7AF83;
+    --line-soft:#DCCBA3;
+    --brown-deep:#3B2E22;
+    --brown-mid:#6E5A45;
+    --gold:#A17C46;
+    --gold-deep:#8A6635;
+    --white-ish:#FCF9F2;
+    --shadow: 0 10px 30px rgba(59,46,34,0.08);
+  }
+
+  *{box-sizing:border-box;}
+
+  html{scroll-behavior:smooth;}
+
+  body{
+    margin:0;
+    background:var(--cream);
+    color:var(--brown-deep);
+    font-family:'EB Garamond', serif;
+    font-size:19px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  /* subtle paper texture */
+  body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    background-image:
+      radial-gradient(circle at 20% 30%, rgba(161,124,70,0.035), transparent 40%),
+      radial-gradient(circle at 80% 70%, rgba(161,124,70,0.04), transparent 45%);
+    z-index:0;
+  }
+
+  .wrap{
+    max-width:760px;
+    margin:0 auto;
+    padding:0 28px 100px;
+    position:relative;
+    z-index:1;
+  }
+
+  /* ---------- ORNAMENTS ---------- */
+  .sprig{
+    display:block;
+    margin:0 auto;
+    opacity:0.85;
+  }
+  .sprig path, .sprig ellipse{
+    stroke:var(--gold-deep);
+    fill:none;
+    stroke-width:1.1;
+  }
+  .sprig .leaf{
+    fill:var(--gold-deep);
+    opacity:0.55;
+    stroke:none;
+  }
+
+  .rule{
+    width:100%;
+    height:1px;
+    background:linear-gradient(90deg, transparent, var(--line) 20%, var(--line) 80%, transparent);
+    border:none;
+    margin:56px 0;
+  }
+
+  /* ---------- HERO ---------- */
+  header.hero{
+    text-align:center;
+    padding:88px 0 20px;
+  }
+
+  .eyebrow{
+    font-family:'EB Garamond', serif;
+    font-style:italic;
+    letter-spacing:0.22em;
+    text-transform:uppercase;
+    font-size:13px;
+    color:var(--brown-mid);
+    margin-bottom:18px;
+  }
+
+  h1.title{
+    font-family:'Pinyon Script', cursive;
+    font-weight:400;
+    font-size:clamp(52px, 10vw, 76px);
+    color:var(--gold-deep);
+    margin:0 0 8px;
+    line-height:1.1;
+  }
+
+  .subtitle{
+    font-family:'Cormorant Garamond', serif;
+    font-style:italic;
+    font-size:20px;
+    color:var(--brown-mid);
+    margin-top:6px;
+  }
+
+  /* ---------- TIMELINE ---------- */
+  section.timeline{
+    position:relative;
+    padding:20px 0 10px;
+  }
+
+  h2.section-title{
+    font-family:'Cormorant Garamond', serif;
+    font-weight:600;
+    font-size:15px;
+    letter-spacing:0.28em;
+    text-transform:uppercase;
+    text-align:center;
+    color:var(--brown-mid);
+    margin:0 0 48px;
+  }
+
+  .timeline-line{
+    position:absolute;
+    left:112px;
+    top:78px;
+    bottom:30px;
+    width:1px;
+    background:var(--line-soft);
+  }
+
+  .event{
+    display:grid;
+    grid-template-columns:96px 32px 1fr;
+    align-items:start;
+    margin-bottom:34px;
+    position:relative;
+  }
+
+  .event .time{
+    font-family:'Cormorant Garamond', serif;
+    font-weight:600;
+    font-size:19px;
+    color:var(--gold-deep);
+    text-align:right;
+    padding-top:2px;
+    white-space:nowrap;
+  }
+
+  .event .node{
+    display:flex;
+    justify-content:center;
+    padding-top:8px;
+  }
+
+  .event .node::before{
+    content:"";
+    width:10px;
+    height:10px;
+    border-radius:50%;
+    background:var(--gold-deep);
+    border:1.5px solid var(--gold-deep);
+    display:block;
+  }
+
+  .event .content{
+    padding-left:6px;
+  }
+
+  .event .headline{
+    font-family:'Cormorant Garamond', serif;
+    font-weight:500;
+    font-size:22px;
+    color:var(--gold-deep);
+  }
+
+  .event.milestone .headline{
+    font-weight:600;
+  }
+
+  .event .note{
+    font-family:'EB Garamond', serif;
+    font-style:italic;
+    font-size:16px;
+    color:var(--brown-mid);
+    margin-top:2px;
+  }
+
+  .event.fin .headline{
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    font-size:20px;
+  }
+
+  /* ---------- MAP CARDS ---------- */
+  h2.stops-title{
+    font-family:'Pinyon Script', cursive;
+    font-weight:400;
+    font-size:38px;
+    color:var(--gold-deep);
+    text-align:center;
+    margin:0 0 8px;
+  }
+
+  p.stops-sub{
+    text-align:center;
+    font-style:italic;
+    color:var(--brown-mid);
+    font-size:16px;
+    margin:0 0 40px;
+  }
+
+  .stops{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:28px;
+  }
+
+  @media (max-width:640px){
+    .stops{ grid-template-columns:1fr; }
+    .event{ grid-template-columns:76px 24px 1fr; }
+    .event .time{ font-size:16px; }
+    .timeline-line{ left:88px; }
+  }
+
+  .stop-card{
+    background:var(--white-ish);
+    border:1px solid var(--sand);
+    border-radius:2px;
+    box-shadow:var(--shadow);
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+  }
+
+  .stop-card .map-frame{
+    width:100%;
+    height:190px;
+    border:none;
+    filter:sepia(12%) saturate(80%) contrast(96%);
+    display:block;
+  }
+
+  .stop-card .stop-body{
+    padding:22px 24px 26px;
+    text-align:center;
+  }
+
+  .stop-card .stop-city{
+    font-family:'Cormorant Garamond', serif;
+    font-weight:600;
+    font-size:20px;
+    letter-spacing:0.04em;
+    color:var(--brown-deep);
+    margin:0 0 4px;
+  }
+
+  .stop-card .stop-address{
+    font-style:italic;
+    font-size:16px;
+    color:var(--brown-mid);
+    margin:0 0 18px;
+  }
+
+  .btn-directions{
+    display:inline-block;
+    padding:10px 26px;
+    border:1px solid var(--gold-deep);
+    color:var(--gold-deep);
+    text-decoration:none;
+    font-family:'EB Garamond', serif;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    font-size:12.5px;
+    border-radius:1px;
+    transition:background 0.25s ease, color 0.25s ease;
+  }
+
+  .btn-directions:hover{
+    background:var(--gold-deep);
+    color:var(--white-ish);
+  }
+
+  .btn-directions:focus-visible{
+    outline:2px solid var(--gold-deep);
+    outline-offset:3px;
+  }
+
+  footer.closing{
+    text-align:center;
+    padding-top:60px;
+  }
+
+  footer.closing .amp{
+    font-family:'Pinyon Script', cursive;
+    font-size:42px;
+    color:var(--gold-deep);
+    display:block;
+    margin-bottom:6px;
+  }
+
+  footer.closing p{
+    font-style:italic;
+    color:var(--brown-mid);
+    font-size:16px;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <div class="eyebrow">Nuestra boda</div>
+    <h1 class="title">Cronología</h1>
+    <p class="subtitle">Programa de la celebración</p>
+    <svg class="sprig" width="140" height="34" viewBox="0 0 140 34" aria-hidden="true">
+      <path d="M10 17 C 45 5, 95 5, 130 17" />
+      <ellipse class="leaf" cx="35" cy="12" rx="5" ry="2.4" transform="rotate(-20 35 12)"/>
+      <ellipse class="leaf" cx="70" cy="8" rx="5" ry="2.4" transform="rotate(0 70 8)"/>
+      <ellipse class="leaf" cx="105" cy="12" rx="5" ry="2.4" transform="rotate(20 105 12)"/>
+    </svg>
+  </header>
+
+  <section class="timeline">
+    <h2 class="section-title">10 : 30 h — 23 : 00 h</h2>
+    <div class="timeline-line"></div>
+
+    <div class="event milestone">
+      <div class="time">10:30 h</div>
+      <div class="node"></div>
+      <div class="content">
+        <div class="headline">Salida del autobús desde San Sebastián - Donostia</div>
+      </div>
+    </div>
+
+    <div class="event milestone">
+      <div class="time">11:10 h</div>
+      <div class="node"></div>
+      <div class="content">
+        <div class="headline">Salida del autobús desde Hondarribia</div>
+      </div>
+    </div>
+
+    <div class="event">
+      <div class="time">11:30 h</div>
+      <div class="node"></div>
+      <div class="content">
+        <div class="headline">Llegada de los invitados a Guadalupe</div>
+      </div>
+    </div>
+
+    <div class="event milestone">
+      <div class="time">12:00 h</div>
+      <div class="node"></div>
+      <div class="content">
+        <div class="headline">Inicio de la ceremonia</div>
+      </div>
+    </div>
+
+    <div class="event">
+      <div class="time">13:00 h</div>
+      <div class="node"></div>
+      <div class="content">
+        <div class="headline">Conclusión de la ceremonia</div>
+      </div>
+    </div>
+
+    <div class="event milestone">
+      <div class="time">13:30 h</div>
+      <div class="node"></div>
+      <div class="content">
+        <div class="headline">Traslado en autobús hacia el restaurante - Bekoerrota</div>
+      </div>
+    </div>
+
+    <div class="event">
+      <div class="time">13:45 h</div>
+      <div class="node"></div>
+      <div class="content">
+        <div class="headline">Llegada y cóctel de bienvenida</div>
+      </div>
+    </div>
+
+    <div class="event milestone">
+      <div class="time">15:30 h</div>
+      <div class="node"></div>
+      <div class="content">
+        <div class="headline">Banquete</div>
+      </div>
+    </div>
+
+    <div class="event">
+      <div class="time">18:00 h</div>
+      <div class="node"></div>
+      <div class="content">
+        <div class="headline">Café y servicio de copas</div>
+      </div>
+    </div>
+
+    <div class="event milestone">
+      <div class="time">18:30 h</div>
+      <div class="node"></div>
+      <div class="content">
+        <div class="headline">Apertura del baile</div>
+      </div>
+    </div>
+
+    <div class="event">
+      <div class="time">21:00 h</div>
+      <div class="node"></div>
+      <div class="content">
+        <div class="headline">Recena</div>
+      </div>
+    </div>
+
+    <div class="event fin milestone">
+      <div class="time">23:00 h</div>
+      <div class="node"></div>
+      <div class="content">
+        <div class="headline">Fin de la celebración</div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="rule">
+
+  <h2 class="stops-title" style="margin-top:0;">Puntos de salida</h2>
+  <p class="stops-sub">Autobuses de cortesía hacia Guadalupe</p>
+
+  <div class="stops">
+    <div class="stop-card">
+      <iframe class="map-frame" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+        src="https://www.google.com/maps?q=Calle+Easo+65,+San+Sebasti%C3%A1n&output=embed"
+        title="Mapa punto de salida San Sebastián" allowfullscreen></iframe>
+      <div class="stop-body">
+        <p class="stop-city">San Sebastián (Donostia)</p>
+        <p class="stop-address">Calle Easo, 65</p>
+        <a class="btn-directions" href="https://www.google.com/maps/dir/?api=1&destination=Calle+Easo+65,+San+Sebasti%C3%A1n" target="_blank" rel="noopener">Cómo llegar</a>
+      </div>
+    </div>
+
+    <div class="stop-card">
+      <iframe class="map-frame" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+        src="https://www.google.com/maps?q=Calle+Sabin+Arana+Goiri+8,+Hondarribia&output=embed"
+        title="Mapa punto de salida Hondarribia" allowfullscreen></iframe>
+      <div class="stop-body">
+        <p class="stop-city">Hondarribia</p>
+        <p class="stop-address">Calle Sabin Arana Goiri, 8</p>
+        <a class="btn-directions" href="https://www.google.com/maps/dir/?api=1&destination=Calle+Sabin+Arana+Goiri+8,+Hondarribia" target="_blank" rel="noopener">Cómo llegar</a>
+      </div>
+    </div>
+  </div>
+
+  <footer class="closing">
+    <span class="amp">&amp;</span>
+    <p>Os esperamos con muchísima ilusión</p>
+  </footer>
+
+</div>
+</body>
+</html>
